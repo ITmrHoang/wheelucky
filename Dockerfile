@@ -1,4 +1,4 @@
-FROM php:8-fpm-alpine
+FROM alpine:3.15
 LABEL Maintainer="Hoang <itmrhoang@gmail.com>"
 LABEL Description="Lightweight container with Nginx 1.20 & PHP 8.0 & laravel & sqlite based on Alpine Linux."
 
@@ -7,38 +7,40 @@ ARG uid=1000
 # Setup document root
 WORKDIR /var/www/html
 
+RUN apk update && apk upgrade
+
 # Install packages and remove default server definition
 RUN apk add --no-cache \
   curl \
   nginx \
   git \
   vim \
-  php8 \
-  php8-ctype \
-  php8-curl \
-  php8-dom \
-  php8-fpm \
-  php8-gd \
-  php8-intl \
-  php8-mbstring \
-  php8-mysqli \
-  php8-opcache \
-  php8-openssl \
-  php8-phar \
-  php8-session \
-  php8-xml \
-  php8-xmlreader \
-  php8-zlib \
+  php7 \
+  php7-ctype \
+  php7-curl \
+  php7-dom \
+  php7-fpm \
+  php7-gd \
+  php7-intl \
+  php7-mbstring \
+  php7-mysqli \
+  php7-opcache \
+  php7-openssl \
+  php7-phar \
+  php7-session \
+  php7-xml \
+  php7-xmlreader \
+  php7-zlib \
   supervisor
 
 # Create symlink so programs depending on `php` still function
-RUN ln -s /usr/bin/php8 /usr/bin/php
+RUN ln -s /usr/bin/php7 /usr/bin/php
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
 # Configure PHP-FPM
-COPY config/fpm-pool.conf /etc/php8/php-fpm.d/www.conf
+COPY config/fpm-pool.conf /etc/php7/php-fpm.d/www.conf
 COPY config/php.ini /etc/php8/conf.d/custom.ini
 
 # Configure supervisord
@@ -51,7 +53,7 @@ RUN chown -R nobody.nobody /var/www/html /run /var/lib/nginx /var/log/nginx
 USER nobody
 
 # Add application
-COPY --chown=nobody src/ /var/www/html/
+COPY --chown=nobody source/ /var/www/html/
 
 # Expose the port nginx is reachable on
 EXPOSE 8080 8000
