@@ -1,6 +1,9 @@
 FROM php:8-fpm-alpine
 LABEL Maintainer="Hoang <itmrhoang@gmail.com>"
 LABEL Description="Lightweight container with Nginx 1.20 & PHP 8.0 & laravel & sqlite based on Alpine Linux."
+
+ARG user=himodevvn
+ARG uid=1000
 # Setup document root
 WORKDIR /var/www/html
 
@@ -8,6 +11,8 @@ WORKDIR /var/www/html
 RUN apk add --no-cache \
   curl \
   nginx \
+  git \
+  vim \
   php8 \
   php8-ctype \
   php8-curl \
