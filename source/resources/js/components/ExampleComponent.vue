@@ -16,7 +16,7 @@
         Remove
     </button>
     <div class="wheel-wrapper">
-        <div class="wheel-pointer" @click="onClickRotate">Start</div>
+        <!-- <div class="wheel-pointer" @click="onClickRotate">Start</div> -->
         <div
             class="wheel-bg"
             :class="{ freeze: freeze }"
@@ -30,17 +30,22 @@
                 >
                     <div
                         class="prize-item"
-                        :style="`transform: rotate(${
+                        :style="`
+                        z-index:10;
+                        background: ${index & 1 ? 'blue' : 'red'};
+                        transform: rotate(${
                             (360 / prizeList.length) * index
-                        }deg)`"
+                        }deg)`
+                        "
                     >
                         <div class="prize-name">
                             {{ item.name }}
                         </div>
-                        <div class="prize-icon">
+                        <div class="prize-icon" style=" position: relative;">
                             <img :src="item.icon" />
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -205,7 +210,8 @@ html {
     width: 100%;
     height: 100%;
     transform-origin: bottom;
-
+    -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
     .prize-name {
         padding: 16px 0;
     }
@@ -213,4 +219,5 @@ html {
     .prize-icon {
     }
 }
+
 </style>

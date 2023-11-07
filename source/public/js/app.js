@@ -2018,11 +2018,6 @@ var render = function render() {
   }, [_vm._v("\n        Remove\n    ")]), _vm._v(" "), _c("div", {
     staticClass: "wheel-wrapper"
   }, [_c("div", {
-    staticClass: "wheel-pointer",
-    on: {
-      click: _vm.onClickRotate
-    }
-  }, [_vm._v("Start")]), _vm._v(" "), _c("div", {
     staticClass: "wheel-bg",
     "class": {
       freeze: _vm.freeze
@@ -2036,11 +2031,14 @@ var render = function render() {
       staticClass: "prize-item-wrapper"
     }, [_c("div", {
       staticClass: "prize-item",
-      style: "transform: rotate(".concat(360 / _vm.prizeList.length * index, "deg)")
+      style: "\n                        z-index:10;\n                        background: ".concat(index & 1 ? "blue" : "red", ";\n                        transform: rotate(").concat(360 / _vm.prizeList.length * index, "deg)")
     }, [_c("div", {
       staticClass: "prize-name"
     }, [_vm._v("\n                            " + _vm._s(item.name) + "\n                        ")]), _vm._v(" "), _c("div", {
-      staticClass: "prize-icon"
+      staticClass: "prize-icon",
+      staticStyle: {
+        position: "relative"
+      }
     }, [_c("img", {
       attrs: {
         src: item.icon
@@ -6432,7 +6430,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml {\n    background: #dd7c7d;\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 60px;\n    height: 60px;\n    border-radius: 1000px;\n    background: yellow;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 60px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content: \"\";\n        position: absolute;\n        top: -32px;\n        left: 50%;\n        border-width: 0 8px 40px;\n        border-style: solid;\n        border-color: transparent transparent yellow;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 1000px;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: #7eef97;\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 100%;\n    height: 100%;\n    transform-origin: bottom;\n.prize-name {\n        padding: 16px 0;\n}\n.prize-icon {\n}\n}\n", ""]);
+exports.push([module.i, "\nhtml {\n    background: #dd7c7d;\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 60px;\n    height: 60px;\n    border-radius: 1000px;\n    background: yellow;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 60px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content: \"\";\n        position: absolute;\n        top: -32px;\n        left: 50%;\n        border-width: 0 8px 40px;\n        border-style: solid;\n        border-color: transparent transparent yellow;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 1000px;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: #7eef97;\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 100%;\n    height: 100%;\n    transform-origin: bottom;\n    -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);\n    clip-path: polygon(50% 100%, 0 0, 100% 0);\n.prize-name {\n        padding: 16px 0;\n}\n.prize-icon {\n}\n}\n\n", ""]);
 
 // exports
 
