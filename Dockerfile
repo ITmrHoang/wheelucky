@@ -11,6 +11,7 @@ RUN apk update && apk upgrade
 
 # Install packages and remove default server definition
 RUN apk add --no-cache \
+  sqlite \
   curl \
   nginx \
   git \
@@ -18,6 +19,7 @@ RUN apk add --no-cache \
   php7 \
   php7-ctype \
   php7-curl \
+  php7-json \
   php7-dom \
   php7-fpm \
   php7-gd \
@@ -29,6 +31,7 @@ RUN apk add --no-cache \
   php7-phar \
   php7-session \
   php7-xml \
+  php7-xls \
   php7-xmlreader \
   php7-zlib \
   php7-sqlite3 \
@@ -36,6 +39,10 @@ RUN apk add --no-cache \
 
 # Create symlink so programs depending on `php` still function
 #RUN ln -s /usr/bin/php7 /usr/bin/php
+
+
+#install composer 
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
