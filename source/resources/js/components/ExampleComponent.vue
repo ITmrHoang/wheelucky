@@ -161,20 +161,23 @@ html {
     cursor: pointer;
 
     &::after {
-        content: "";
+        content: " ";
         position: absolute;
-        top: -32px;
+        top: -10px;
         left: 50%;
-        border-width: 0 8px 40px;
+        width:30px;
+        height:30px;
+        z-index:5;
+        clip-path: polygon(50% 0%, 35% 50%, 66% 50%);
         border-style: solid;
-        border-color: transparent transparent yellow;
+        background: red;
         transform: translateX(-50%);
     }
 }
 .wheel-bg {
     width: 100%;
     height: 100%;
-    border-radius: 1000px;
+    border-radius: 50%;
     overflow: hidden;
     transition: transform 4s ease-in-out;
     background: #7eef97;

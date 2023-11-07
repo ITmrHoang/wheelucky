@@ -11,6 +11,7 @@ RUN apk update && apk upgrade
 
 # Install packages and remove default server definition
 RUN apk add --no-cache \
+  sqlite \
   curl \
   nginx \
   git \
