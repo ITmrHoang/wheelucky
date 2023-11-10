@@ -1,7 +1,7 @@
 <template>
     <div>
     <span>Prize number: {{ prizeNumber }}</span>
-    <button
+    <!-- <button
         type="button"
         @click="!rolling && prizeNumber < 8 && prizeNumber++"
         :disabled="rolling || prizeNumber === 8"
@@ -14,7 +14,7 @@
         :disabled="rolling || prizeNumber === 2"
     >
         Remove
-    </button>
+    </button> -->
     <div class="wheel-wrapper">
         <!-- <div class="wheel-pointer" @click="onClickRotate">Start</div> -->
         <div
@@ -41,8 +41,8 @@
                         <div class="prize-name">
                             {{ item.name }}
                         </div>
-                        <div class="prize-icon" style=" position: relative;">
-                            <img :src="item.icon" />
+                        <div class="prize-icon">
+                            <img :src="item.icon"  width="40px" height="40px"/>
                         </div>
                     </div>
 
@@ -55,6 +55,7 @@
 
 <script>
 export default {
+    name: "WheelLucky",
     data() {
         return {
             freeze: false,
@@ -216,10 +217,14 @@ html {
     -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
     clip-path: polygon(50% 100%, 0 0, 100% 0);
     .prize-name {
-        padding: 16px 0;
+        padding: 8px 0;
     }
 
+    .prize-name {
+        position: relative;
+    }
     .prize-icon {
+        position: relative;
     }
 }
 

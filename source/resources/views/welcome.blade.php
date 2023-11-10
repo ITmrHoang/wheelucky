@@ -15,7 +15,7 @@
     </head>
     <body>
         <div id='app'>
-            <example-component></example-component>
+            <wheel-lucky></wheel-lucky>
         </div>
     </body>
 </html>
