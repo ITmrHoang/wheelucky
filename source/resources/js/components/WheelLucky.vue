@@ -1,7 +1,8 @@
 <template>
     <div>
-    <span>Prize number: {{ prizeNumber }}</span>
-    <!-- <button
+       
+        <!-- <span>Prize {{ prizeLenght }}  number: {{ prizeNumber }}</span>
+    <button
         type="button"
         @click="!rolling && prizeNumber < 8 && prizeNumber++"
         :disabled="rolling || prizeNumber === 8"
@@ -16,7 +17,7 @@
         Remove
     </button> -->
     <div class="wheel-wrapper">
-        <!-- <div class="wheel-pointer" @click="onClickRotate">Start</div> -->
+        <div class="wheel-pointer" @click="onClickRotate">Start</div>
         <div
             class="wheel-bg"
             :class="{ freeze: freeze }"
@@ -32,14 +33,14 @@
                         class="prize-item"
                         :style="`
                         z-index:10;
-                        background: ${index & 1 ? 'blue' : 'red'};
+                        background: ${item.color ?? randomColor()};
                         transform: rotate(${
                             (360 / prizeList.length) * index
                         }deg)`
                         "
                     >
                         <div class="prize-name">
-                            {{ item.name }}
+                            {{ item.name}}
                         </div>
                         <div class="prize-icon">
                             <img :src="item.icon"  width="40px" height="40px"/>
@@ -60,50 +61,43 @@ export default {
         return {
             freeze: false,
             rolling: false,
+            clipath: "polygon(10px 0, 50% 100%, 132px 0)",
+            width: '150px',
             wheelDeg: 0,
-            prizeNumber: 8,
+            prizeNumber: 6,
             prizeListOrigin: [
                 {
                     icon: "https://picsum.photos/40?random=1",
                     name: "$10000",
+                    color: 'red',
                 },
                 {
                     icon: "https://picsum.photos/40?random=6",
                     name: "Thank you!",
+                    color: 'blue',
+
                 },
                 {
                     icon: "https://picsum.photos/40?random=2",
                     name: "$500",
-                },
-                {
-                    icon: "https://picsum.photos/40?random=3",
-                    name: "$100",
-                },
-                {
-                    icon: "https://picsum.photos/40?random=6",
-                    name: "Thank you!",
-                },
-                {
-                    icon: "https://picsum.photos/40?random=4",
-                    name: "$50",
-                },
-                {
-                    icon: "https://picsum.photos/40?random=5",
-                    name: "$10",
-                },
-                {
-                    icon: "https://picsum.photos/40?random=6",
-                    name: "Thank you!",
+                    color: 'green',
+
                 },
             ],
         };
     },
     computed: {
         prizeList() {
-            return this.prizeListOrigin.slice(0, this.prizeNumber);
+            return this.prizeListOrigin;
         },
+        prizeLenght() {
+            return this.prizeList.length
+        }
     },
     methods: {
+        randomColor() {
+           return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+        },
         onClickRotate() {
             if (this.rolling) {
                 return;
@@ -124,6 +118,18 @@ export default {
                 alert("Result：" + prizeList[result].name);
             }, 4500);
         },
+        updateLength() {
+            let _length = this.prizeLenght;
+            console.log(_length,this.clipath)
+            if(_length == 8){
+                this.clipath = "polygon(10px 0, 50% 100%, 132px 0)";
+            }
+            else if(_length == 7){
+                this.clipath ="polygon(3px 0, 50% 100%, 146px 0)"
+            } else if(_length == 6) {
+                this.clipath = "polygon(-9px 0, 50% 100%, 163px 0)"
+            }
+        }
     },
     watch: {
         prizeNumber() {
@@ -134,7 +140,11 @@ export default {
                 this.freeze = false;
             }, 0);
         },
+        
     },
+    created(){
+        this.updateLength()
+    }
 };
 </script>
 
@@ -153,30 +163,30 @@ html {
 }
 
 .wheel-pointer {
-    width: 60px;
-    height: 60px;
-    border-radius: 1000px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     background: yellow;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    line-height: 60px;
+    line-height: 50px;
     z-index: 10;
     cursor: pointer;
 
     &::after {
-        content: " ";
+        content:  "";
         position: absolute;
         top: -10px;
         left: 50%;
-        width:30px;
-        height:30px;
+        width: 26px;
+        height:26px;
         z-index:5;
         clip-path: polygon(50% 0%, 35% 50%, 66% 50%);
         border-style: solid;
-        background: red;
+        background: yellow;
         transform: translateX(-50%);
     }
 }
@@ -211,20 +221,24 @@ html {
 }
 
 .prize-item {
-    width: 100%;
-    height: 100%;
+    width: 150px;
+    height: 150px;
     transform-origin: bottom;
-    -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
-    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    -webkit-clip-path: v-bind(clipath);
+    clip-path:  v-bind(clipath);
     .prize-name {
         padding: 8px 0;
     }
 
     .prize-name {
         position: relative;
+        width: 150px;
+        overflow: hidden;
     }
     .prize-icon {
         position: relative;
+        width: 150px;
+        overflow: hidden;
     }
 }
 

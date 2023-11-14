@@ -1925,47 +1925,45 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ({
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+var __default__ = {
   name: "WheelLucky",
   data: function data() {
     return {
       freeze: false,
       rolling: false,
+      clipath: "polygon(10px 0, 50% 100%, 132px 0)",
+      width: '150px',
       wheelDeg: 0,
-      prizeNumber: 8,
+      prizeNumber: 6,
       prizeListOrigin: [{
         icon: "https://picsum.photos/40?random=1",
-        name: "$10000"
+        name: "$10000",
+        color: 'red'
       }, {
         icon: "https://picsum.photos/40?random=6",
-        name: "Thank you!"
+        name: "Thank you!",
+        color: 'blue'
       }, {
         icon: "https://picsum.photos/40?random=2",
-        name: "$500"
-      }, {
-        icon: "https://picsum.photos/40?random=3",
-        name: "$100"
-      }, {
-        icon: "https://picsum.photos/40?random=6",
-        name: "Thank you!"
-      }, {
-        icon: "https://picsum.photos/40?random=4",
-        name: "$50"
-      }, {
-        icon: "https://picsum.photos/40?random=5",
-        name: "$10"
-      }, {
-        icon: "https://picsum.photos/40?random=6",
-        name: "Thank you!"
+        name: "$500",
+        color: 'green'
       }]
     };
   },
   computed: {
     prizeList: function prizeList() {
-      return this.prizeListOrigin.slice(0, this.prizeNumber);
+      return this.prizeListOrigin;
+    },
+    prizeLenght: function prizeLenght() {
+      return this.prizeList.length;
     }
   },
   methods: {
+    randomColor: function randomColor() {
+      return "#".concat(Math.floor(Math.random() * 16777215).toString(16));
+    },
     onClickRotate: function onClickRotate() {
       if (this.rolling) {
         return;
@@ -1983,6 +1981,17 @@ __webpack_require__.r(__webpack_exports__);
         _this.rolling = false;
         alert("Result：" + prizeList[result].name);
       }, 4500);
+    },
+    updateLength: function updateLength() {
+      var _length = this.prizeLenght;
+      console.log(_length, this.clipath);
+      if (_length == 8) {
+        this.clipath = "polygon(10px 0, 50% 100%, 132px 0)";
+      } else if (_length == 7) {
+        this.clipath = "polygon(3px 0, 50% 100%, 146px 0)";
+      } else if (_length == 6) {
+        this.clipath = "polygon(-9px 0, 50% 100%, 163px 0)";
+      }
     }
   },
   watch: {
@@ -1994,8 +2003,25 @@ __webpack_require__.r(__webpack_exports__);
         _this2.freeze = false;
       }, 0);
     }
+  },
+  created: function created() {
+    this.updateLength();
   }
-});
+};
+
+var __injectCSSVars__ = function __injectCSSVars__() {
+  Object(vue__WEBPACK_IMPORTED_MODULE_0__["useCssVars"])(function (_vm, _setup) {
+    return {
+      "1426e310-clipath": _vm.clipath
+    };
+  });
+};
+var __setup__ = __default__.setup;
+__default__.setup = __setup__ ? function (props, ctx) {
+  __injectCSSVars__();
+  return __setup__(props, ctx);
+} : __injectCSSVars__;
+/* harmony default export */ __webpack_exports__["default"] = (__default__);
 
 /***/ }),
 
@@ -2051,9 +2077,14 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", [_c("span", [_vm._v("Prize number: " + _vm._s(_vm.prizeNumber))]), _vm._v(" "), _c("div", {
+  return _c("div", [_c("div", {
     staticClass: "wheel-wrapper"
   }, [_c("div", {
+    staticClass: "wheel-pointer",
+    on: {
+      click: _vm.onClickRotate
+    }
+  }, [_vm._v("Start")]), _vm._v(" "), _c("div", {
     staticClass: "wheel-bg",
     "class": {
       freeze: _vm.freeze
@@ -2062,12 +2093,13 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "prize-list"
   }, _vm._l(_vm.prizeList, function (item, index) {
+    var _item$color;
     return _c("div", {
       key: index,
       staticClass: "prize-item-wrapper"
     }, [_c("div", {
       staticClass: "prize-item",
-      style: "\n                        z-index:10;\n                        background: ".concat(index & 1 ? "blue" : "red", ";\n                        transform: rotate(").concat(360 / _vm.prizeList.length * index, "deg)")
+      style: "\n                        z-index:10;\n                        background: ".concat((_item$color = item.color) !== null && _item$color !== void 0 ? _item$color : _vm.randomColor(), ";\n                        transform: rotate(").concat(360 / _vm.prizeList.length * index, "deg)")
     }, [_c("div", {
       staticClass: "prize-name"
     }, [_vm._v("\n                            " + _vm._s(item.name) + "\n                        ")]), _vm._v(" "), _c("div", {
@@ -6465,7 +6497,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml {\n    background: #dd7c7d;\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 60px;\n    height: 60px;\n    border-radius: 1000px;\n    background: yellow;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 60px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content: \" \";\n        position: absolute;\n        top: -10px;\n        left: 50%;\n        width:30px;\n        height:30px;\n        z-index:5;\n        -webkit-clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n                clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n        border-style: solid;\n        background: red;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: #7eef97;\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 100%;\n    height: 100%;\n    transform-origin: bottom;\n    -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);\n    clip-path: polygon(50% 100%, 0 0, 100% 0);\n.prize-name {\n        padding: 8px 0;\n}\n.prize-name {\n        position: relative;\n}\n.prize-icon {\n        position: relative;\n}\n}\n\n", ""]);
+exports.push([module.i, "\nhtml {\n    background: #dd7c7d;\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 50px;\n    height: 50px;\n    border-radius: 50%;\n    background: yellow;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 50px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content:  \"\";\n        position: absolute;\n        top: -10px;\n        left: 50%;\n        width: 26px;\n        height:26px;\n        z-index:5;\n        -webkit-clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n                clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n        border-style: solid;\n        background: yellow;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: #7eef97;\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 150px;\n    height: 150px;\n    transform-origin: bottom;\n    -webkit-clip-path: var(--1426e310-clipath);\n    clip-path:  var(--1426e310-clipath);\n.prize-name {\n        padding: 8px 0;\n}\n.prize-name {\n        position: relative;\n        width: 150px;\n        overflow: hidden;\n}\n.prize-icon {\n        position: relative;\n        width: 150px;\n        overflow: hidden;\n}\n}\n\n", ""]);
 
 // exports
 
