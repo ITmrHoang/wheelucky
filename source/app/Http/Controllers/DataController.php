@@ -35,7 +35,12 @@ class DataController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $check = Data::updateOrCreate([$request->get('name'), $request->all()]);
+            return response()->json(["success"=> 1, "data" => $check]);
+        } catch (\Exception $e) {
+            return response()->json(["success"=> 0, "data" => "", "msg"=> $e->getMessage()]);
+        }
     }
 
     /**
