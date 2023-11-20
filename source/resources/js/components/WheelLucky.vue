@@ -38,7 +38,9 @@
         </div>
       </div>
     <div class="wheel-wrapper">
-        <div class="wheel-pointer" @click="onClickRotate">Start</div>
+        <div class="wheel-pointer" @click="onClickRotate">
+             <button class="wheel__button">QUAY</button>
+            </div>
         <div
             class="wheel-bg"
             :class="{ freeze: freeze }"
@@ -182,37 +184,74 @@ html {
 }
 
 .wheel-pointer {
-    width: 50px;
-    height: 50px;
+    width: 51px;
+    height: 51px;
     border-radius: 50%;
-    background: rgb(232, 232, 15);
+    background:#fff;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     line-height: 50px;
-    z-index: 10;
+    z-index: 2;
     cursor: pointer;
+    border: solid 6px #fff;
+    box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open sans', sans-serif;
 
     &::after {
-        content:  "";
-        position: absolute;
-        top: -10px;
+        content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: solid;
+            border-width: 0 10px 20px;
+            border-color: transparent;
+            border-bottom-color: #fff;
+            top: -15px;
+            transform: translateX(-50%);
+            
+    }
+}
+
+.wheel__button {
+    z-index: 10;
+    position: absolute;
+    width: 39px;
+    height: 39px;
+    background-color: lightgray;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 13px;
+    top:0;
+    left: 0;
+    &:hover {
+        color: #27AE60;
+    }
+    &:active{
+        border: solid 3px rgba(0, 0, 0, 0.1);
+        font-size: 11px;
+        line-height: 12px;
+        width: 50px;
+        height: 50px;
         left: 50%;
-        width: 26px;
-        height:26px;
-        z-index:5;
-        clip-path: polygon(50% 0%, 35% 50%, 66% 50%);
-        border-style: solid;
-        background: rgb(232, 232, 15);;
-        transform: translateX(-50%);
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 }
 .wheel-bg {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    border: solid 6px #fff;
+    box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
     transition: transform 4s ease-in-out;
     background: rgb(120, 118, 118);
