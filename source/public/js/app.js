@@ -1908,9 +1908,102 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+var initState = {
+  url: '',
+  noidung: '',
+  mau: '',
+  anh: ''
+};
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  name: "SettingData",
+  data: function data() {
+    var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    return {
+      background: "",
+      data: [],
+      csrf: csrf
+    };
+  },
+  computed: {
+    ListLength: function ListLength() {
+      return this.data.length;
+    }
+  },
+  methods: {
+    onFileChange: function onFileChange(e, index) {
+      var _this = this;
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.readFile(files[0]).then(function (val) {
+        _this.data[index].anh = val;
+      });
+    },
+    onChange: function onChange(e, index) {
+      var name = e.target.name;
+      var val = e.target.value;
+      this.data[index][name] = val;
+    },
+    readFile: function readFile(file) {
+      return new Promise(function (resolve, reject) {
+        var fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = function () {
+          resolve(fileReader.result);
+        };
+        fileReader.onerror = function (error) {
+          reject(error);
+        };
+      });
+    },
+    add: function add() {
+      this.data.push(_objectSpread({}, initState));
+    },
+    remove: function remove(index) {
+      console.log(index);
+      var _data = _toConsumableArray(this.data);
+      _data.splice(index, 1);
+      this.data = _data;
+    },
+    handleSummit: function handleSummit() {
+      var _check = this.data.length;
+      if (this.background) axios.post('/data', {
+        name: 'background',
+        data: this.background
+      });
+      if (_check >= 6 && _check <= 8) {
+        axios.post('/data', {
+          name: 'data',
+          data: _toConsumableArray(this.data)
+        }).then(function (res) {
+          return window.location.reload();
+        });
+      } else {
+        alert("nhập >= 6 và <=8 item");
+      }
+    }
+  },
+  beforeCreate: function beforeCreate() {
+    var _this2 = this;
+    axios.get('/data/data').then(function (res) {
+      var _res$data;
+      return _this2.data = (_res$data = res.data) !== null && _res$data !== void 0 && _res$data.data ? JSON.parse(res.data.data) : [];
+    });
+    axios.get('/data/background').then(function (res) {
+      var _res$data$data, _res$data2;
+      return _this2.background = (_res$data$data = (_res$data2 = res.data) === null || _res$data2 === void 0 ? void 0 : _res$data2.data) !== null && _res$data$data !== void 0 ? _res$data$data : '';
+    });
   }
 });
 
@@ -1931,25 +2024,15 @@ var __default__ = {
   name: "WheelLucky",
   data: function data() {
     return {
+      show: {},
+      background: "",
       freeze: false,
       rolling: false,
       clipath: "polygon(10px 0, 50% 100%, 132px 0)",
       width: '150px',
       wheelDeg: 0,
       prizeNumber: 6,
-      prizeListOrigin: [{
-        icon: "https://picsum.photos/40?random=1",
-        name: "$10000",
-        color: 'red'
-      }, {
-        icon: "https://picsum.photos/40?random=6",
-        name: "Thank you!",
-        color: 'blue'
-      }, {
-        icon: "https://picsum.photos/40?random=2",
-        name: "$500",
-        color: 'green'
-      }]
+      prizeListOrigin: []
     };
   },
   computed: {
@@ -1977,9 +2060,12 @@ var __default__ = {
       var wheelDeg = this.wheelDeg,
         prizeList = this.prizeList;
       this.wheelDeg = wheelDeg - wheelDeg % 360 + 6 * 360 + (360 - 360 / prizeList.length * result);
+      console.log(this.wheelDeg);
+      this.show = prizeList[result];
       setTimeout(function () {
         _this.rolling = false;
-        alert("Result：" + prizeList[result].name);
+        // alert("Result：" + prizeList[result].name);
+        $('#myModal').modal('show');
       }, 4500);
     },
     updateLength: function updateLength() {
@@ -1992,6 +2078,10 @@ var __default__ = {
       } else if (_length == 6) {
         this.clipath = "polygon(-9px 0, 50% 100%, 163px 0)";
       }
+    },
+    openUrl: function openUrl(url) {
+      console.log(url);
+      window.open(url);
     }
   },
   watch: {
@@ -2005,13 +2095,24 @@ var __default__ = {
     }
   },
   created: function created() {
+    var _this3 = this;
     this.updateLength();
-  }
+    axios.get('/data/data').then(function (res) {
+      var _res$data;
+      return _this3.prizeListOrigin = (_res$data = res.data) !== null && _res$data !== void 0 && _res$data.data ? JSON.parse(res.data.data) : [];
+    });
+    axios.get('/data/background').then(function (res) {
+      var _res$data$data, _res$data2;
+      return _this3.background = (_res$data$data = (_res$data2 = res.data) === null || _res$data2 === void 0 ? void 0 : _res$data2.data) !== null && _res$data$data !== void 0 ? _res$data$data : '';
+    });
+  },
+  mounted: function mounted() {}
 };
 
 var __injectCSSVars__ = function __injectCSSVars__() {
   Object(vue__WEBPACK_IMPORTED_MODULE_0__["useCssVars"])(function (_vm, _setup) {
     return {
+      "1426e310-background": _vm.background,
       "1426e310-clipath": _vm.clipath
     };
   });
@@ -2039,11 +2140,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "container"
   }, [_c("div", {
@@ -2054,10 +2150,166 @@ var staticRenderFns = [function () {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
-  }, [_vm._v("Example Component")]), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_vm._v("\n                    I'm an example component.\n                ")])])])])]);
-}];
+  }, [_vm._v("Thiết lập dữ liệu: " + _vm._s(_vm.ListLength))]), _vm._v(" "), _c("div", {
+    staticClass: "card-body",
+    staticStyle: {
+      position: "relative"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "sticky"
+    }
+  }, [_c("button", {
+    on: {
+      click: _vm.add
+    }
+  }, [_vm._v(" thêm")])]), _vm._v(" "), _c("form", [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "maunen"
+    }
+  }, [_vm._v("Mầu nền")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.background,
+      expression: "background"
+    }],
+    attrs: {
+      type: "text",
+      id: "maunen"
+    },
+    domProps: {
+      value: _vm.background
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.background = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _vm._l(_vm.data, function (item, index) {
+    return _c("div", {
+      staticClass: "row"
+    }, [_c("div", {
+      staticClass: "col-12"
+    }, [_c("button", {
+      attrs: {
+        type: "button"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.remove(index);
+        }
+      }
+    }, [_vm._v("xóa")])]), _vm._v(" "), _c("h1", {
+      staticClass: "col-12"
+    }, [_vm._v("Item " + _vm._s(index + 1))]), _vm._v(" "), _c("div", {
+      staticClass: "col-12 form-group"
+    }, [_c("label", {
+      attrs: {
+        "for": "noidung"
+      }
+    }, [_vm._v("Nội dung thông báo")]), _vm._v(" "), _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "text",
+        name: "noidung"
+      },
+      domProps: {
+        value: item.noidung
+      },
+      on: {
+        change: function change(e) {
+          return _vm.onChange(e, index);
+        }
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "form-group col-12"
+    }, [_c("label", {
+      attrs: {
+        "for": "url"
+      }
+    }, [_vm._v("Đường dẫn")]), _vm._v(" "), _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "text",
+        name: "url"
+      },
+      domProps: {
+        value: item.url
+      },
+      on: {
+        change: function change(e) {
+          return _vm.onChange(e, index);
+        }
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "form-group col-12"
+    }, [_c("label", {
+      attrs: {
+        "for": "mau"
+      }
+    }, [_vm._v("Mầu")]), _vm._v(" "), _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "text",
+        name: "mau",
+        pattern: "#([a-f0-9]{6}|[a-f0-9]{3})"
+      },
+      domProps: {
+        value: item.mau
+      },
+      on: {
+        change: function change(e) {
+          return _vm.onChange(e, index);
+        }
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "form-group col-12"
+    }, [_c("label", {
+      attrs: {
+        "for": "file"
+      }
+    }, [_vm._v("Ảnh")]), _vm._v(" "), _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "file",
+        accept: "image/png, image/jpeg",
+        id: "file"
+      },
+      on: {
+        change: function change(e) {
+          return _vm.onFileChange(e, index);
+        }
+      }
+    }), _vm._v(" "), _c("div", {
+      staticStyle: {
+        width: "128px",
+        height: "128px"
+      }
+    }, [_c("img", {
+      staticStyle: {
+        width: "128px",
+        height: "128px"
+      },
+      attrs: {
+        src: item.anh,
+        alt: "anh"
+      }
+    })])])]);
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: _vm.handleSummit
+    }
+  }, [_vm._v("Submit")])], 2)])])])])]);
+};
+var staticRenderFns = [];
 render._withStripped = true;
 
 
@@ -2075,9 +2327,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
 var render = function render() {
+  var _this$show;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", [_c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "myModal",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v(" " + _vm._s((_this$show = this.show) === null || _this$show === void 0 ? void 0 : _this$show.noidung))]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+    staticClass: "modal-body"
+  }, [_c("div", {
+    staticClass: "row flex justify-content-center"
+  }, [_c("div", {
+    staticClass: "col-12 text-center"
+  }, [_c("a", {
+    attrs: {
+      href: _vm.show.url,
+      target: "_blank"
+    }
+  }, [_vm._v("Mở")])]), _vm._v(" "), _c("img", {
+    attrs: {
+      src: _vm.show.anh,
+      width: "120px",
+      height: "120px"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.openUrl(_vm.show.url);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  })])])]), _vm._v(" "), _c("div", {
     staticClass: "wheel-wrapper"
   }, [_c("div", {
     staticClass: "wheel-pointer",
@@ -2093,27 +2392,40 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "prize-list"
   }, _vm._l(_vm.prizeList, function (item, index) {
-    var _item$color;
+    var _item$mau;
     return _c("div", {
       key: index,
       staticClass: "prize-item-wrapper"
     }, [_c("div", {
       staticClass: "prize-item",
-      style: "\n                        z-index:10;\n                        background: ".concat((_item$color = item.color) !== null && _item$color !== void 0 ? _item$color : _vm.randomColor(), ";\n                        transform: rotate(").concat(360 / _vm.prizeList.length * index, "deg)")
+      style: "\n                        z-index:10;\n                        position: relative;\n                        background: ".concat((_item$mau = item.mau) !== null && _item$mau !== void 0 ? _item$mau : _vm.randomColor(), ";\n                        transform: rotate(").concat(360 / _vm.prizeList.length * index, "deg)")
     }, [_c("div", {
-      staticClass: "prize-name"
-    }, [_vm._v("\n                            " + _vm._s(item.name) + "\n                        ")]), _vm._v(" "), _c("div", {
       staticClass: "prize-icon"
     }, [_c("img", {
       attrs: {
-        src: item.icon,
+        src: item.anh,
         width: "40px",
         height: "40px"
       }
     })])])]);
   }), 0)])])]);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])]);
+}];
 render._withStripped = true;
 
 
@@ -6497,7 +6809,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nhtml {\n    background: #dd7c7d;\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 50px;\n    height: 50px;\n    border-radius: 50%;\n    background: yellow;\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 50px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content:  \"\";\n        position: absolute;\n        top: -10px;\n        left: 50%;\n        width: 26px;\n        height:26px;\n        z-index:5;\n        -webkit-clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n                clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n        border-style: solid;\n        background: yellow;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: #7eef97;\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 150px;\n    height: 150px;\n    transform-origin: bottom;\n    -webkit-clip-path: var(--1426e310-clipath);\n    clip-path:  var(--1426e310-clipath);\n.prize-name {\n        padding: 8px 0;\n}\n.prize-name {\n        position: relative;\n        width: 150px;\n        overflow: hidden;\n}\n.prize-icon {\n        position: relative;\n        width: 150px;\n        overflow: hidden;\n}\n}\n\n", ""]);
+exports.push([module.i, "\nhtml {\n    background: var(--1426e310-background);\n}\n.wheel-wrapper {\n    width: 300px;\n    height: 300px;\n    position: absolute;\n    top: 50%;\n    left: 50%;\n    transform: translate(-50%, -50%);\n}\n.wheel-pointer {\n    width: 50px;\n    height: 50px;\n    border-radius: 50%;\n    background: rgb(232, 232, 15);\n    position: absolute;\n    left: 50%;\n    top: 50%;\n    transform: translate(-50%, -50%);\n    text-align: center;\n    line-height: 50px;\n    z-index: 10;\n    cursor: pointer;\n&::after {\n        content:  \"\";\n        position: absolute;\n        top: -10px;\n        left: 50%;\n        width: 26px;\n        height:26px;\n        z-index:5;\n        -webkit-clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n                clip-path: polygon(50% 0%, 35% 50%, 66% 50%);\n        border-style: solid;\n        background: rgb(232, 232, 15);;\n        transform: translateX(-50%);\n}\n}\n.wheel-bg {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n    overflow: hidden;\n    transition: transform 4s ease-in-out;\n    background: rgb(120, 118, 118);\n&.freeze {\n        transition: none;\n        background: red;\n}\n}\n.prize-list {\n    width: 100%;\n    height: 100%;\n    position: relative;\n    text-align: center;\n}\n.prize-item-wrapper {\n    position: absolute;\n    top: 0;\n    left: 50%;\n    transform: translateX(-50%);\n    width: 150px;\n    height: 150px;\n}\n.prize-item {\n    width: 150px;\n    height: 150px;\n    transform-origin: bottom;\n    -webkit-clip-path: var(--1426e310-clipath);\n    clip-path:  var(--1426e310-clipath);\n.prize-name {\n        padding: 8px 0;\n}\n.prize-name {\n        position: absolute;\n        top: 6px;\n        z-index: 20;\n        width: 150px;\n        color: azure;\n        font-weight: 600;\n        overflow: hidden;\n}\n.prize-icon {\n        position: absolute;\n        z-index: 10;\n        top: 33px;\n        width: 150px;\n        overflow: hidden;\n}\n}\n\n", ""]);
 
 // exports
 
@@ -50245,6 +50557,9 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+document.addEventListener("DOMContentLoaded", function (event) {
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+});
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

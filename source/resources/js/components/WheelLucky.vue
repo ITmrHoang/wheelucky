@@ -1,6 +1,6 @@
 <template>
     <div>
-       
+
         <!-- <span>Prize {{ prizeLenght }}  number: {{ prizeNumber }}</span>
     <button
         type="button"
@@ -16,6 +16,27 @@
     >
         Remove
     </button> -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle"> {{ this.show?.noidung }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row flex justify-content-center">
+              
+                <div class="col-12 text-center">   <a :href="show.url" target="_blank">Mở</a> </div>
+                <img :src="show.anh"  width="120px" height="120px" @click="openUrl(show.url)"/>
+              </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="wheel-wrapper">
         <div class="wheel-pointer" @click="onClickRotate">Start</div>
         <div
@@ -33,17 +54,18 @@
                         class="prize-item"
                         :style="`
                         z-index:10;
-                        background: ${item.color ?? randomColor()};
+                        position: relative;
+                        background: ${item.mau ?? randomColor()};
                         transform: rotate(${
                             (360 / prizeList.length) * index
                         }deg)`
                         "
                     >
-                        <div class="prize-name">
+                        <!-- <div class="prize-name">
                             {{ item.name}}
-                        </div>
+                        </div> -->
                         <div class="prize-icon">
-                            <img :src="item.icon"  width="40px" height="40px"/>
+                            <img :src="item.anh"  width="40px" height="40px"/>
                         </div>
                     </div>
 
@@ -59,30 +81,15 @@ export default {
     name: "WheelLucky",
     data() {
         return {
+            show: {},
+            background: "",
             freeze: false,
             rolling: false,
             clipath: "polygon(10px 0, 50% 100%, 132px 0)",
             width: '150px',
             wheelDeg: 0,
             prizeNumber: 6,
-            prizeListOrigin: [
-                {
-                    icon: "https://picsum.photos/40?random=1",
-                    name: "$10000",
-                    color: 'red',
-                },
-                {
-                    icon: "https://picsum.photos/40?random=6",
-                    name: "Thank you!",
-                    color: 'blue',
-
-                },
-                {
-                    icon: "https://picsum.photos/40?random=2",
-                    name: "$500",
-                    color: 'green',
-
-                },
+            prizeListOrigin:[
             ],
         };
     },
@@ -113,9 +120,12 @@ export default {
                 (wheelDeg % 360) +
                 6 * 360 +
                 (360 - (360 / prizeList.length) * result);
+                console.log(this.wheelDeg)
+                this.show = prizeList[result]
             setTimeout(() => {
                 this.rolling = false;
-                alert("Result：" + prizeList[result].name);
+                // alert("Result：" + prizeList[result].name);
+                $('#myModal').modal('show')
             }, 4500);
         },
         updateLength() {
@@ -129,6 +139,10 @@ export default {
             } else if(_length == 6) {
                 this.clipath = "polygon(-9px 0, 50% 100%, 163px 0)"
             }
+        },
+        openUrl(url){
+            console.log(url)
+            window.open(url);
         }
     },
     watch: {
@@ -140,17 +154,22 @@ export default {
                 this.freeze = false;
             }, 0);
         },
-        
+
     },
     created(){
-        this.updateLength()
+    this.updateLength();
+    axios.get('/data/data').then(res=> this.prizeListOrigin = res.data?.data ? JSON.parse(res.data.data) : [])
+    axios.get('/data/background').then(res=> this.background = res.data?.data ?? '')
+    },
+    mounted() {
+
     }
 };
 </script>
 
 <style>
 html {
-    background: #dd7c7d;
+    background: v-bind(background);
 }
 
 .wheel-wrapper {
@@ -166,7 +185,7 @@ html {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: yellow;
+    background: rgb(232, 232, 15);
     position: absolute;
     left: 50%;
     top: 50%;
@@ -186,7 +205,7 @@ html {
         z-index:5;
         clip-path: polygon(50% 0%, 35% 50%, 66% 50%);
         border-style: solid;
-        background: yellow;
+        background: rgb(232, 232, 15);;
         transform: translateX(-50%);
     }
 }
@@ -196,7 +215,7 @@ html {
     border-radius: 50%;
     overflow: hidden;
     transition: transform 4s ease-in-out;
-    background: #7eef97;
+    background: rgb(120, 118, 118);
 
     &.freeze {
         transition: none;
@@ -231,12 +250,18 @@ html {
     }
 
     .prize-name {
-        position: relative;
+        position: absolute;
+        top: 6px;
+        z-index: 20;
         width: 150px;
+        color: azure;
+        font-weight: 600;
         overflow: hidden;
     }
     .prize-icon {
-        position: relative;
+        position: absolute;
+        z-index: 10;
+        top: 33px;
         width: 150px;
         overflow: hidden;
     }

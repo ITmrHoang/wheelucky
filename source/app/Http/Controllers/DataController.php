@@ -36,7 +36,10 @@ class DataController extends Controller
     public function store(Request $request)
     {
         try {
-            $check = Data::updateOrCreate([$request->get('name'), $request->all()]);
+            $check = Data::updateOrCreate(["name" => $request->get('name')],
+             [
+                "data" => $request->get('data')
+             ]);
             return response()->json(["success"=> 1, "data" => $check]);
         } catch (\Exception $e) {
             return response()->json(["success"=> 0, "data" => "", "msg"=> $e->getMessage()]);
@@ -49,9 +52,9 @@ class DataController extends Controller
      * @param  \App\Data  $data
      * @return \Illuminate\Http\Response
      */
-    public function show(Data $data)
+    public function show(Request $request, $name)
     {
-        //
+        return response()->json(Data::where('name',  $name)->first());
     }
 
     /**
